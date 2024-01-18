@@ -1,11 +1,13 @@
 package net.htlgkr.kainzt.pos3.NYResolution;
 
 import net.htlgkr.kainzt.pos3.NYResolution.enums.MyCategory;
+import net.htlgkr.kainzt.pos3.NYResolution.enums.MyFilter;
 import net.htlgkr.kainzt.pos3.NYResolution.storage.ResolutionStorage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,12 +19,47 @@ public class Main {
         int exitCode = 9;
         while (lastChosen!=exitCode){
             showMainMenu();
-            lastChosen = Integer.parseInt(scanner.nextLine());
+            try {
+                lastChosen = Integer.parseInt(scanner.nextLine());
+            }catch (NumberFormatException e){
+                System.err.println("Not a valid Selection");
+                continue;
+            }
             switch (lastChosen){
                 case 1:
                     addNewResolution();
                     break;
                 case 2 :
+                    int showMenuChoice = -1;
+                    MyFilter filter = null;
+
+                    while (true) {
+                        showResolutionMenu();
+                        try {
+                            showMenuChoice = Integer.parseInt(scanner.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a number!");
+                        }
+                        switch (showMenuChoice) {
+                            case 1:
+                                filter = MyFilter.DEADLINE;
+                                break;
+                            case 2:
+                                filter = MyFilter.PRIORITY;
+                                break;
+                            case 3:
+                                filter = MyFilter.CATEGORY;
+                                break;
+                            case 4:
+                                break;
+                            default:
+                                System.out.println("Please enter a number between 1 and 4!");
+                                break;
+                        }
+                        break;
+                    }
+
+                    showResolutions(filter);
                     break;
                 case 3:
                     break;
@@ -39,10 +76,30 @@ public class Main {
                     System.out.println("Quitting ...");
                     break;
                 default:
-                    System.out.println("Not a valid Selection");
+                    System.err.println("Not a valid Selection");
             }
         }
 
+    }
+    private static void showResolutions(MyFilter filter) {
+        List<Resolution> resolutionList = resolutionStorage.getResolutions();
+        if (filter == MyFilter.DEADLINE) {
+            resolutionList.sort(Comparator.comparing(Resolution::getDeadline));
+        } else if (filter == MyFilter.PRIORITY) {
+            resolutionList.sort(Comparator.comparingInt(Resolution::getPriority).reversed());
+        } else if (filter == MyFilter.CATEGORY) {
+            resolutionList.sort(Comparator.comparing((Resolution o) -> o.getCategory().name()));
+        }
+        for (Resolution resolution : resolutionList) {
+            System.out.println(resolution);
+        }
+    }
+
+    public static void showResolutionMenu() {
+        System.out.println("1 ... Sort by deadline");
+        System.out.println("2 ... Sort by priority");
+        System.out.println("3 ... Sort by category (alphabetically)");
+        System.out.println("4 ... Back to main menu");
     }
 
     private static void markResolutionDone() {
@@ -50,7 +107,7 @@ public class Main {
         if (resolution==null) return;
         boolean validSelection = false;
         while(!validSelection){
-            System.out.println("Mark as Done? (Done/Not Done)");
+            System.err.println("Mark as Done? (Done/Not Done)");
             String result = scanner.nextLine();
             if (result.equalsIgnoreCase("Done")){
                 validSelection = true;
@@ -72,7 +129,7 @@ public class Main {
         if (resolution==null) return;
         boolean validSelection = false;
         while(!validSelection){
-            System.out.println("This Operation is Not Reversible, Remove? (Y/N)");
+            System.err.println("This Operation is Not Reversible, Remove? (Y/N)");
             String result = scanner.nextLine();
             if (result.equalsIgnoreCase("Y")){
                 validSelection = true;
@@ -101,14 +158,12 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String searchTerm = scanner.nextLine();
         List<Resolution> searchResult = resolutionStorage.getResolutions().stream()
-                .filter(resolution -> {
-                    return resolution.getTitle().toUpperCase().contains(searchTerm.toUpperCase()) ||
-                            resolution.getDescription().toUpperCase().contains(searchTerm.toUpperCase()) ||
-                            resolution.getCategory().name().toUpperCase().contains(searchTerm.toUpperCase());
-                })
+                .filter(resolution -> resolution.getTitle().toUpperCase().contains(searchTerm.toUpperCase()) ||
+                        resolution.getDescription().toUpperCase().contains(searchTerm.toUpperCase()) ||
+                        resolution.getCategory().toString().toUpperCase().contains(searchTerm.toUpperCase()))
                 .toList();
         if (searchResult.isEmpty()){
-            System.out.println("Result is empty");
+            System.err.println("Result is empty");
             return null;
         }
         int selection = -1;
@@ -120,10 +175,10 @@ public class Main {
             try {
                 selection = Integer.parseInt(scanner.nextLine());
             }catch (NumberFormatException e){
-                System.out.println("not a valid selection");
+                System.err.println("not a valid selection");
             }
             if (selection < 0 || selection > (searchResult.size()+1)) {
-                System.out.println("not a valid selection");
+                System.err.println("not a valid selection");
             }
         }
         System.out.println(searchResult.get(selection - 1));
@@ -148,7 +203,7 @@ public class Main {
                 priority = Integer.parseInt(scanner.nextLine());
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Please enter a number!");
+                System.err.println("Please enter a number!");
             }
         }
 
@@ -160,7 +215,7 @@ public class Main {
                 category = MyCategory.valueOf(scanner.nextLine().toUpperCase());
                 break;
             } catch (IllegalArgumentException e) {
-                System.out.println("Please enter a valid category!");
+                System.err.println("Please enter a valid category!");
             }
         }
 
