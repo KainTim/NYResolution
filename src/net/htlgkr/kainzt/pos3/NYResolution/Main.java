@@ -33,6 +33,7 @@ public class Main {
                     deleteResolution();
                     break;
                 case 6 :
+                    markResolutionDone();
                     break;
                 case 9:
                     System.out.println("Quitting ...");
@@ -44,8 +45,31 @@ public class Main {
 
     }
 
+    private static void markResolutionDone() {
+        Resolution resolution = searchForResolution();
+        if (resolution==null) return;
+        boolean validSelection = false;
+        while(!validSelection){
+            System.out.println("Mark as Done? (Done/Not Done)");
+            String result = scanner.nextLine();
+            if (result.equalsIgnoreCase("Done")){
+                validSelection = true;
+                System.out.println("Marking as Done");
+                resolution.setDone(true);
+                resolution.setDoneDate(LocalDate.now());
+                System.out.println("Done");
+            } else if (result.equalsIgnoreCase("Not Done")) {
+                validSelection = true;
+                System.out.println("Marking as Not Done");
+                resolution.setDone(false);
+                resolution.setDoneDate(null);
+            }
+        }
+    }
+
     private static void deleteResolution() {
         Resolution resolution = searchForResolution();
+        if (resolution==null) return;
         boolean validSelection = false;
         while(!validSelection){
             System.out.println("This Operation is Not Reversible, Remove? (Y/N)");
@@ -78,9 +102,9 @@ public class Main {
         String searchTerm = scanner.nextLine();
         List<Resolution> searchResult = resolutionStorage.getResolutions().stream()
                 .filter(resolution -> {
-                    return resolution.title().toUpperCase().contains(searchTerm.toUpperCase()) ||
-                            resolution.description().toUpperCase().contains(searchTerm.toUpperCase()) ||
-                            resolution.category().name().toUpperCase().contains(searchTerm.toUpperCase());
+                    return resolution.getTitle().toUpperCase().contains(searchTerm.toUpperCase()) ||
+                            resolution.getDescription().toUpperCase().contains(searchTerm.toUpperCase()) ||
+                            resolution.getCategory().name().toUpperCase().contains(searchTerm.toUpperCase());
                 })
                 .toList();
         if (searchResult.isEmpty()){
@@ -88,7 +112,7 @@ public class Main {
             return null;
         }
         int selection = -1;
-        while(selection < 0 || selection > (searchResult.size()+1)) {
+        while(selection <= 0 || selection > (searchResult.size()+1)) {
             System.out.println("Select your Result:");
             for (int i = 0; i < searchResult.size(); i++) {
                 System.out.println("ID: " + (i + 1) + "|| " + searchResult.get(i));
