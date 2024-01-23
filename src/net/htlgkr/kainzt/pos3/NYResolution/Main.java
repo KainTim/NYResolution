@@ -6,7 +6,6 @@ import net.htlgkr.kainzt.pos3.NYResolution.storage.ResolutionStorage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
@@ -62,6 +61,7 @@ public class Main {
                     showResolutions(filter);
                     break;
                 case 3:
+                    showResolutionsInTimeframe();
                     break;
                 case 4 :
                     searchForResolution();
@@ -72,6 +72,9 @@ public class Main {
                 case 6 :
                     markResolutionDone();
                     break;
+                case 7 :
+                    showStatistics();
+                    break;
                 case 9:
                     System.out.println("Quitting ...");
                     break;
@@ -81,6 +84,17 @@ public class Main {
         }
 
     }
+
+    private static void showResolutionsInTimeframe() {
+        //Todo
+        System.out.println("Todo");
+    }
+
+    private static void showStatistics() {
+        //Todo
+        System.out.println("Todo");
+    }
+
     private static void showResolutions(MyFilter filter) {
         List<Resolution> resolutionList = resolutionStorage.getResolutions();
         if (filter == MyFilter.DEADLINE) {
@@ -151,6 +165,7 @@ public class Main {
         System.out.println("4... Search for a Resolution");
         System.out.println("5... Delete a Resolution");
         System.out.println("6... Mark Resolution as Done Resolution");
+        System.out.println("6... Show Statistics");
         System.out.println("9... Quit");
     }
     private static Resolution searchForResolution(){
