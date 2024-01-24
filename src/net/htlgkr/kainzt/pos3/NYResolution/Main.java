@@ -75,6 +75,12 @@ public class Main {
                 case 6 :
                     markResolutionDone();
                     break;
+                case 7 :
+                    saveResolutions();
+                    break;
+                case 8 :
+                    loadResolutions();
+                    break;
                 case 9:
                     System.out.println("Quitting ...");
                     break;
@@ -84,6 +90,16 @@ public class Main {
         }
 
     }
+    private static void saveResolutions() {
+        System.out.println("Todo");
+        //Todo
+    }
+
+    private static void loadResolutions() {
+        System.out.println("Todo");
+        //Todo
+    }
+
 
     private static void showStatistics() {
         System.out.println("\n_________________________________");
@@ -168,6 +184,8 @@ public class Main {
         System.out.println("4... Search for a Resolution");
         System.out.println("5... Delete a Resolution");
         System.out.println("6... Mark Resolution as Done");
+        System.out.println("7... Save to disk");
+        System.out.println("8... Load from disk");
         System.out.println("9... Quit");
     }
     private static Resolution searchForResolution(){
