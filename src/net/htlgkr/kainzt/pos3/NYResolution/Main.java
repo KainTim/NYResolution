@@ -4,8 +4,11 @@ import net.htlgkr.kainzt.pos3.NYResolution.enums.MyCategory;
 import net.htlgkr.kainzt.pos3.NYResolution.enums.MyFilter;
 import net.htlgkr.kainzt.pos3.NYResolution.storage.ResolutionStorage;
 
+import javax.xml.datatype.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAmount;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
@@ -61,7 +64,7 @@ public class Main {
                     showResolutions(filter);
                     break;
                 case 3:
-                    showResolutionsInTimeframe();
+                    showStatistics();
                     break;
                 case 4 :
                     searchForResolution();
@@ -71,9 +74,6 @@ public class Main {
                     break;
                 case 6 :
                     markResolutionDone();
-                    break;
-                case 7 :
-                    showStatistics();
                     break;
                 case 9:
                     System.out.println("Quitting ...");
@@ -85,14 +85,17 @@ public class Main {
 
     }
 
-    private static void showResolutionsInTimeframe() {
-        //Todo
-        System.out.println("Todo");
-    }
-
     private static void showStatistics() {
+        System.out.println("\n_________________________________");
         System.out.println("Statistics:");
-        System.out.println("Resolutions: " + resolutionStorage.getResolutions().size());
+        System.out.println("All Resolutions: " + resolutionStorage.getResolutions().size());
+        System.out.println("Done Resolutions: " + resolutionStorage.getResolutions().stream().filter(Resolution::isDone).count());
+        System.out.println("Overtime Resolutions: " + resolutionStorage.getResolutions().stream().filter(resolution -> (!resolution.isDone())&&resolution.getDeadline().isAfter(LocalDate.now())).count());
+        System.out.println("7 Day Resolutions: " + resolutionStorage.getResolutions().stream().filter(resolution -> (!resolution.isDone())&&resolution.getDeadline().isAfter(LocalDate.now().minusDays(7))).count());
+        System.out.println("30 Day Resolutions: " + resolutionStorage.getResolutions().stream().filter(resolution -> (!resolution.isDone())&&resolution.getDeadline().isAfter(LocalDate.now().minusDays(30))).count());
+        System.out.println("365 Day Resolutions: " + resolutionStorage.getResolutions().stream().filter(resolution -> (!resolution.isDone())&&resolution.getDeadline().isAfter(LocalDate.now().minusDays(365))).count());
+
+        System.out.println("_________________________________\n");
     }
 
     private static void showResolutions(MyFilter filter) {
@@ -161,11 +164,10 @@ public class Main {
     private static void showMainMenu(){
         System.out.println("1... Add new Resolution");
         System.out.println("2... Show all Resolutions");
-        System.out.println("3... Show Resolutions in specific Timeframe");
+        System.out.println("3... Show Statistics");
         System.out.println("4... Search for a Resolution");
         System.out.println("5... Delete a Resolution");
         System.out.println("6... Mark Resolution as Done");
-        System.out.println("7... Show Statistics");
         System.out.println("9... Quit");
     }
     private static Resolution searchForResolution(){
