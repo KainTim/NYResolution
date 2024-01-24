@@ -91,8 +91,8 @@ public class Main {
     }
 
     private static void showStatistics() {
-        //Todo
-        System.out.println("Todo");
+        System.out.println("Statistics:");
+        System.out.println("Resolutions: " + resolutionStorage.getResolutions().size());
     }
 
     private static void showResolutions(MyFilter filter) {
@@ -165,7 +165,7 @@ public class Main {
         System.out.println("4... Search for a Resolution");
         System.out.println("5... Delete a Resolution");
         System.out.println("6... Mark Resolution as Done");
-        System.out.println("6... Show Statistics");
+        System.out.println("7... Show Statistics");
         System.out.println("9... Quit");
     }
     private static Resolution searchForResolution(){
