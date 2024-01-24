@@ -3,6 +3,8 @@ package net.htlgkr.kainzt.pos3.NYResolution;
 import net.htlgkr.kainzt.pos3.NYResolution.enums.MyCategory;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class Resolution {
     private String title;
@@ -13,6 +15,10 @@ public class Resolution {
     private MyCategory category;
     private LocalDate creationDate;
     private LocalDate doneDate;
+
+    public Resolution() {
+
+    }
 
     public Resolution(String title, String description, LocalDate deadline, boolean done, int priority, MyCategory category, LocalDate creationDate, LocalDate doneDate) {
         this.title = title;
@@ -25,6 +31,18 @@ public class Resolution {
         this.doneDate = doneDate;
     }
 
+    public DateResolution toDateResolution(){
+        DateResolution dateResolution = new DateResolution();
+        dateResolution.setTitle(title);
+        dateResolution.setDescription(description);
+        dateResolution.setDeadline(deadline==null?null:Date.from(deadline.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        dateResolution.setDone(done);
+        dateResolution.setPriority(priority);
+        dateResolution.setCategory(category);
+        dateResolution.setCreationDate(creationDate==null?null:Date.from(creationDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        dateResolution.setDoneDate(doneDate==null?null:Date.from(doneDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        return dateResolution;
+    }
     public String getTitle() {
         return title;
     }

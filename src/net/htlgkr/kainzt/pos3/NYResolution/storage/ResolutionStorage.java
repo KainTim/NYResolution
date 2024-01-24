@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResolutionStorage {
+    public void setResolutions(List<Resolution> resolutions) {
+        this.resolutions = resolutions;
+    }
+
     private List<Resolution> resolutions;
     public ResolutionStorage() {
         resolutions = new ArrayList<>();

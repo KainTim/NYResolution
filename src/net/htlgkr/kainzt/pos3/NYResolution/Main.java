@@ -5,10 +5,16 @@ import net.htlgkr.kainzt.pos3.NYResolution.enums.MyFilter;
 import net.htlgkr.kainzt.pos3.NYResolution.storage.ResolutionStorage;
 
 import javax.xml.datatype.Duration;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAmount;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
@@ -91,13 +97,22 @@ public class Main {
 
     }
     private static void saveResolutions() {
-        System.out.println("Todo");
-        //Todo
+
+      try (XMLEncoder xmlEncoder = new XMLEncoder(new FileOutputStream("resolutions.xml"))) {
+          List<DateResolution> list = resolutionStorage.getResolutions().stream().map(Resolution::toDateResolution).toList();
+          xmlEncoder.writeObject(new ArrayList<>(list));
+      } catch (FileNotFoundException e) {
+          System.err.println("No File Found");
+      }
     }
 
     private static void loadResolutions() {
-        System.out.println("Todo");
-        //Todo
+      try(XMLDecoder xmlDecoder = new XMLDecoder(new FileInputStream("resolutions.xml"))) {
+        List<DateResolution> dateResolutions = (List<DateResolution>) xmlDecoder.readObject();
+        resolutionStorage.setResolutions(new ArrayList<>(dateResolutions.stream().map(DateResolution::toResolution).toList()));
+      } catch (FileNotFoundException e) {
+          System.err.println("No file Found");
+      }
     }
 
 
