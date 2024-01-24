@@ -164,7 +164,7 @@ public class Main {
         System.out.println("3... Show Resolutions in specific Timeframe");
         System.out.println("4... Search for a Resolution");
         System.out.println("5... Delete a Resolution");
-        System.out.println("6... Mark Resolution as Done Resolution");
+        System.out.println("6... Mark Resolution as Done");
         System.out.println("6... Show Statistics");
         System.out.println("9... Quit");
     }
